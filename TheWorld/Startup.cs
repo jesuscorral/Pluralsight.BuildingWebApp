@@ -35,29 +35,41 @@ namespace TheWorld
             else
             {
                 //Implement a real Mail Service
-               
+
             }
 
             services.AddDbContext<WorldContext>();
+
+            services.AddScoped<IWorldRepository, WorldRepository>();
+            
+            services.AddTransient<WorldContextSeedData>();
+
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app
+            , IHostingEnvironment env
+            , WorldContextSeedData seeder)
         {
+
             if (env.IsEnvironment("Development"))
             {
                 app.UseDeveloperExceptionPage();
             }
 
             app.UseStaticFiles();
-            app.UseMvc(config => {
+            app.UseMvc(config =>
+            {
                 config.MapRoute(
                     name: "Default",
                     template: "{controller}/{action}/{id?}",
                     defaults: new { controller = "App", action = "Index" }
                     );
             });
+
+
+            seeder.EnsureSeedData().Wait();
         }
     }
 }
