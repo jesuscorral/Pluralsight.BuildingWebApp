@@ -4,5 +4,8 @@
   },
   "ConnectionStrings": {
     "WorldContextConnection": "Server=order.yellowfin.com;Database=TheWorld;Persist Security Info=True;User ID=adam;Password=Innovation1;MultipleActiveResultSets=True"
-  }
+  },
+    "Keys": {
+      "BingKey" : "DONTEVERPUTKEYSINSOURCECONTROL"
+    }
 }
