@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TheWorld.Models;
 using TheWorld.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TheWorld.Controllers.Api
 {
     [Route("api/trips")]
+    [Authorize]
     public class TripsController : Controller
     {
         private IWorldRepository _repository;
@@ -26,7 +28,7 @@ namespace TheWorld.Controllers.Api
         {
             try
             {
-                var results = _repository.GetAllTrips();
+                var results = _repository.GetTripByUserName(this.User.Identity.Name);
 
                 return Ok(Mapper.Map<IEnumerable<TripViewModel>>(results));
             }
@@ -34,6 +36,7 @@ namespace TheWorld.Controllers.Api
             {
                 //TODO Logging
                 _logger.LogError($"Failed to get All Trips: {ex}");
+
                 return BadRequest("Error ocurred");
             }
         }
@@ -44,6 +47,8 @@ namespace TheWorld.Controllers.Api
             if (ModelState.IsValid)
             {
                 var newTrip = Mapper.Map<Trip>(theTrip);
+
+                newTrip.UserName = User.Identity.Name;
 
                 _repository.AddTrip(newTrip);
 

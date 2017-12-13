@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -28,12 +28,27 @@ namespace TheWorld.Controllers.Web
         {
             try
             {
-                var data = _repository.GetAllTrips();
-                return View(data);
+                return View();
             }
             catch (Exception e)
             {
                 _logger.LogError($"Failed to get trips in the Index page : {e.Message}");
+                return Redirect("/error");
+            }
+        }
+
+        [Authorize]
+        public IActionResult Trips()
+        {
+            try
+            {
+                var trips = _repository.GetAllTrips();
+
+                return View(trips);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Failed to get trips in the Trips page : {e.Message}");
                 return Redirect("/error");
             }
         }

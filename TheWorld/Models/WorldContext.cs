@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore; //Está perfecto
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace TheWorld.Models
 {
-    public class WorldContext : DbContext
+    public class WorldContext : IdentityDbContext<WorldUser>
     {
         private IConfigurationRoot _config;
 
@@ -12,9 +13,9 @@ namespace TheWorld.Models
         {
             _config = config;
         }
+        public DbSet<Stop> Stops { get; set; }
 
         public DbSet<Trip> Trips { get; set; }
-        public DbSet<Stop> Stops { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
